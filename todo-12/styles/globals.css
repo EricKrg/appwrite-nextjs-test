@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    color: white;
+    background: black;
+  }
+}
+
+/* extend tailwind with custom classes */
+@layer components {
+  .content-container {
+    @apply flex flex-col bg-gradient-to-r from-indigo-200 via-red-200 to-yellow-100 m-0 h-screen w-full overflow-hidden dark:bg-gradient-to-b dark:from-gray-900 dark:to-gray-600 
+  }
+
+  .content-container-inner {
+    @apply flex flex-col bg-slate-100 dark:bg-gray-700 lg:m-auto shadow-lg h-full w-full p-3 lg:w-4/5 lg:h-4/5 md:rounded-none lg:rounded-lg overflow-hidden;
+  }
+
+  .content-heading {
+    @apply text-3xl capitalize text-slate-700 text-left font-bold dark:text-slate-100
+  }
+
+  .login {
+    @apply p-2 rounded-2xl bg-slate-500 text-slate-50 shadow-xl transition-all duration-200 ease-linear hover:rounded-md
+  }
+
+  .info-pill {
+    @apply mr-2 rounded-3xl px-2 flex flex-row items-center
+  }
+
+  .info-pill-total {
+    @apply text-slate-800 bg-slate-400
+  }
+
+  .info-pill-todo {
+    @apply text-slate-800 bg-indigo-300
+  }
+
+  .info-pill-done {
+    @apply text-slate-800 bg-lime-100
+  }
+
+  .todo-entry {
+    @apply my-2 w-full flex flex-row items-center bg-slate-300  dark:bg-slate-500 dark:text-slate-100 rounded-xl p-1
+  }
+
+  .todo-entry::placeholder {
+    @apply text-white
+  }
+  .todo-state {
+    @apply flex justify-center items-center  h-5 w-5 mr-1 rounded-2xl text-center bg-indigo-500 dark:bg-indigo-300 dark:text-slate-900 hover:animate-pulse
+  }
+
+  .fade-in { animation: fadeIn 300ms normal forwards; }
+  .fade-out { animation: fadeOut 300ms normal forwards; }
+
+  @keyframes fadeIn {
+    0% { @apply scale-0 opacity-0  }
+    100% { @apply scale-100 opacity-100 }
+  }
+
+  @keyframes fadeOut {
+    0% { @apply scale-100 opacity-100 }
+    100% { @apply scale-0 opacity-0 h-0; }
+
+  }
+
+
+
+
+}
