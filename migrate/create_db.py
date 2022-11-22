@@ -65,13 +65,16 @@ if __name__ == "__main__":
     )
     databases = Databases(client)
 
-    print("creating db...")
-    db_res = _create_db(databases, config["DB"]["name"])
-    print("creating collection...")    
-    coll_res = _create_collection(databases,config["DB"]["collection"], db_res["$id"])
-    print("creating attributes...")
-    _create_collection_attrs(
-        db=databases,
-        db_id=db_res["$id"], 
-        collection_id=coll_res["$id"], 
-        schema=json.loads(config.get("MODEL","schema")))
+    try:
+        print("creating db...")
+        db_res = _create_db(databases, config["DB"]["name"])
+        print("creating collection...")    
+        coll_res = _create_collection(databases,config["DB"]["collection"], db_res["$id"])
+        print("creating attributes...")
+        _create_collection_attrs(
+            db=databases,
+            db_id=db_res["$id"], 
+            collection_id=coll_res["$id"], 
+            schema=json.loads(config.get("MODEL","schema")))
+    except Exception as e:
+        print("Database setup failed!", e)
