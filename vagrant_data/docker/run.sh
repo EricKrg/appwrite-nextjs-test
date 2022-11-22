@@ -4,4 +4,4 @@ echo "---------------------------------------------------------------"
 echo "================== DOCKER COMPOSE RUN ========================="
 echo "---------------------------------------------------------------"
 
-cd /vagrant/docker && docker-compose up -d
+cd /vagrant/appwrite && docker compose up -d --remove-orphans

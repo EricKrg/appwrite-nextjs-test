@@ -6,7 +6,7 @@ Vagrant.configure("2") do |config|
             vb.cpus = "1"
           end
         # check if more ports are needed for your application
-        config.vm.network "forwarded_port", guest: 8000, host: 8000
+        config.vm.network "forwarded_port", guest: 80, host: 8000
 
         # mind the folder structure on your host machine, changes are synced to and from the guest
         config.vm.synced_folder "./vagrant_data", "/vagrant", SharedFoldersEnableSymlinksCreate: false
