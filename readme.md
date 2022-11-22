@@ -1,6 +1,6 @@
 # What does that prototype do?
 
-It is used to test if the used technologies are applicable to use for a project. The aim is to provide a baseline or template project 
+Test if the used technologies are applicable for a new project. The aim is to provide a baseline or template project 
 to head start into the next project. 
 
 Used here:
