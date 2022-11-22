@@ -1,17 +1,31 @@
-# Vagrant docker-compose template
+# What does that prototype do?
 
-Since docker is not competable with some IT-security precautions it becomes necessary to run containerized applications
-in closed vitrual environment (even if that may sound a bit strange).
+It is used to test if the used technologies are applicable to use for a project. The aim is to provide a baseline or template project 
+to head start into the next project. 
 
-Because the offical vagrant-plugin for docker-compose only supports docker-compose v1, i created this template
-which alows you to run docker-compose configurations with vagrant only using vagrants internal tools and hooks.
+Used here:
+- Appwrite as BaaS
+    - Authentication 
+    - CRUD Operations and Datastorage
+    - Realtime updates to sync changes between clients
+- React and NextJS to build the Frontend-Application
+    - Routing, Layouting and SSR
+- Tailwind as easy and beautiful CSS-Framework 
+- Vagrant to create reproducable virtual machines
+- Docker to create reproducabel software containers
 
-## Usage
+## How can I install it?
 
-Start the Example with: `vagrant up` Stop the box: `vagrant halt`
+Install the frontend dependencies `cd todo-12 && npm i`
 
-Define the docker-compose version you want to use in `./vagrant_data/docker/install.sh` currently `v2.12.2`
+Requieres `node >= 12.x.x`
 
-Replace the sample files and place all the relevant files for your docker-compose env. in `./vagrant_data/docker/`  
 
-**Feel free to use and improve this template.**
+## How can I run it?
+
+1. Start the vagrant-box with `vagrant up` watch the stacktrace for possible errors.   
+**optional** you can start the Containers directly with `cd vagrant_data/appwrite && docker-compose up -d --remove-orphans`  
+**known issue** it is possible that docker will throw the error *too many pulls*, if thats the case you will need to pull the images seperately and then start Appwrite again.
+
+2. Start the Frontend-Application with `cd todo-12 && npm run dev`
+3. Use the application under `http://localhost:3000`
