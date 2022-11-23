@@ -22,8 +22,12 @@ const DarkModeToggle = () => {
         setDarkTheme(!darkTheme)
     };
     return (
-        <div className="fixed top-0 left-1/2 m-4" onClick={handleMode}>
-                {darkTheme ? <HiSun className="text-white"/> :<HiMoon />}
+        <div className="fixed flex items-center flex-col w-full top-0">
+            <div className="hover:animate-pulse rounded-3xl hover:bg-slate-200
+          dark:hover:bg-slate-600 p-2 m-1 transition-all duration-150 ease-linear cursor-pointer" onClick={handleMode}>
+                {darkTheme ? <HiSun className="text-white"/> :<HiMoon className="text-slate-700"/>}
             </div>
+        </div>
+        
     )
 }

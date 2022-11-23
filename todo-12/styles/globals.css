@@ -45,7 +45,7 @@ a {
   }
 
   .login {
-    @apply p-2 rounded-2xl bg-slate-500 text-slate-50 shadow-xl transition-all duration-200 ease-linear hover:rounded-md
+    @apply p-2 rounded-2xl bg-slate-500 text-slate-50 shadow-xl transition-all duration-200 ease-linear hover:rounded-md w-8 disabled:bg-slate-400 
   }
 
   .info-pill {

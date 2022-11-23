@@ -1,5 +1,6 @@
 import { Account, Client, Databases, Models, Permission, RealtimeResponseEvent, Role } from 'appwrite';
-import { Component, useId } from 'react';
+import { Component } from 'react';
+import {v4 as uuidv4} from 'uuid';
 import { Server } from '../utils/config';
 
 
@@ -33,8 +34,7 @@ export class AppwriteSerivce extends Component {
     }
 
     async loginViaMail(mail: string, pw: string): Promise<Models.Session> {
-        const account = new Account(this.client);
-        const session = await account.createEmailSession(mail, pw);
+        const session = await this.account.createEmailSession(mail, pw);
         return session;
     }
 
@@ -58,7 +58,10 @@ export class AppwriteSerivce extends Component {
         this.account.deleteSession("current");
     }
 
-    async createNewUser(email: string, pw: string) {
+    async createNewUser(name: string, email: string, pw: string): Promise<Models.Account<Models.Preferences>> {
+        const userId = uuidv4();
+        const res = await this.account.create(userId,email, pw, name);
+        return res; 
 
     }
 
