@@ -1,0 +1,91 @@
+{
+    "projectId": "637738c032599cc7af45",
+    "projectName": "test",
+    "collections": [
+        {
+            "$id": "6377552b559b49cb309a",
+            "$createdAt": "2022-11-18T09:49:31.351+00:00",
+            "$updatedAt": "2022-11-18T12:15:30.135+00:00",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "637755222f1a4a5eb65e",
+            "name": "tasks",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "task",
+                    "type": "string",
+                    "status": "available",
+                    "required": false,
+                    "array": false,
+                    "size": 256,
+                    "default": null
+                },
+                {
+                    "key": "taskState",
+                    "type": "boolean",
+                    "status": "available",
+                    "required": false,
+                    "array": false,
+                    "default": null
+                }
+            ],
+            "indexes": []
+        },
+        {
+            "$id": "9b55f1e4-a06b-4a2a-bdac-2e38762c1653",
+            "$createdAt": "2022-11-22T14:23:55.345+00:00",
+            "$updatedAt": "2022-11-22T14:23:55.345+00:00",
+            "$permissions": [
+                "create(\"users\")"
+            ],
+            "databaseId": "fc5ef1f3-b824-4d7d-bf38-242e99366fb6",
+            "name": "tasks",
+            "enabled": true,
+            "documentSecurity": true,
+            "attributes": [
+                {
+                    "key": "task",
+                    "type": "string",
+                    "status": "available",
+                    "required": false,
+                    "array": false,
+                    "size": 500,
+                    "default": null
+                },
+                {
+                    "key": "taskState",
+                    "type": "boolean",
+                    "status": "available",
+                    "required": false,
+                    "array": false,
+                    "default": false
+                }
+            ],
+            "indexes": []
+        }
+    ],
+    "functions": [
+        {
+            "$id": "test-fun",
+            "name": "test-fun",
+            "runtime": "node-16.0",
+            "path": "functions/test-fun",
+            "entrypoint": "src/index.js",
+            "variables": {
+                "DATABASE_ID": "637755222f1a4a5eb65e",
+                "APPWRITE_FUNCTION_ENDPOINT": "http://172.21.0.1/v1",
+                "_comment_for_endpoint": "needs to be the ip or dns name where this pice of shit is running on",
+                "APPWRITE_FUNCTION_API_KEY": "329e566b341f222225006cc5796d0aaab7ddca35bd9e1970afa51bf6869ec200b8939e044c793cba43aa30652a47fe682ac766b01139699f76047277e1ef58692d46e28c1d3f97ce88149a5f3ee6a6b379f8209f427745392625d47d345b54b29d031f8fab1f95fc19a5c54828c74b4dda0bf3f3da84c0e6329fa1a9b9d0c45a"
+            },
+            "execute": [],
+            "events": [
+                "databases.*.collections.*.documents.*.update"
+            ],
+            "schedule": "",
+            "timeout": 15
+        }
+    ]
+}
