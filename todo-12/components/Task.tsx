@@ -58,7 +58,7 @@ export default function Task(params: TaskRecord) {
                 {task && task.taskState ? <HiCheck/> : null}
             </button>
             : null}
-            <input className="grow bg-transparent truncate border-0 focus:ring-0 focus:ring-indigo-500" disabled={isLoading} onBlur={async () => await onBlur()} onChange={(e) => onChangeTask(e.target.value)} value={task ? task.task : ""}
+            <input className={"grow bg-transparent truncate border-0 focus:ring-0 focus:ring-indigo-500 "+ (task?.taskState ? "line-through": "")} disabled={isLoading} onBlur={async () => await onBlur()} onChange={(e) => onChangeTask(e.target.value)} value={task ? task.task : ""}
                 type="text" placeholder="new task...">
             </input>
             {params.id ? <button className="text-red-600 dark:text-red-400" onClick={async () => await appwrite.deleteTask(task!)}>

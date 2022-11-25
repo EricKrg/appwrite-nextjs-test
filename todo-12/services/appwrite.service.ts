@@ -54,8 +54,8 @@ export class AppwriteSerivce extends Component {
 
     }
 
-    logOutCurruentUser(): void {
-        this.account.deleteSession("current");
+    async logOutCurruentUser(): Promise<void> {
+        await this.account.deleteSession("current");
     }
 
     async createNewUser(name: string, email: string, pw: string): Promise<Models.Account<Models.Preferences>> {
@@ -77,7 +77,6 @@ export class AppwriteSerivce extends Component {
                     Permission.delete(Role.user(user.$id)),
                     Permission.read(Role.user(user.$id)),
                     Permission.write(Role.user(user.$id)),
-
                 ])
         } else {
             console.warn("Entry not created no login!");
