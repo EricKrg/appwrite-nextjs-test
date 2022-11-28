@@ -81,8 +81,24 @@
                 "APPWRITE_FUNCTION_API_KEY": "329e566b341f222225006cc5796d0aaab7ddca35bd9e1970afa51bf6869ec200b8939e044c793cba43aa30652a47fe682ac766b01139699f76047277e1ef58692d46e28c1d3f97ce88149a5f3ee6a6b379f8209f427745392625d47d345b54b29d031f8fab1f95fc19a5c54828c74b4dda0bf3f3da84c0e6329fa1a9b9d0c45a"
             },
             "execute": [],
+            "events": [],
+            "schedule": "",
+            "timeout": 15
+        },
+        {
+            "$id": "permission-check",
+            "name": "permission-check",
+            "runtime": "node-16.0",
+            "path": "functions/permission-check",
+            "entrypoint": "src/index.js",
+            "variables": {
+                "APPWRITE_FUNCTION_ENDPOINT": "http://172.21.0.1/v1",
+                "APPWRITE_FUNCTION_API_KEY": "329e566b341f222225006cc5796d0aaab7ddca35bd9e1970afa51bf6869ec200b8939e044c793cba43aa30652a47fe682ac766b01139699f76047277e1ef58692d46e28c1d3f97ce88149a5f3ee6a6b379f8209f427745392625d47d345b54b29d031f8fab1f95fc19a5c54828c74b4dda0bf3f3da84c0e6329fa1a9b9d0c45a"
+            },
+            "execute": [],
             "events": [
-                "databases.*.collections.*.documents.*.update"
+                "databases.*.collections.*.documents.*.update",
+                "databases.*.collections.*.documents.*.create"
             ],
             "schedule": "",
             "timeout": 15
