@@ -1,10 +1,14 @@
-import { Models } from "appwrite";
-import { createContext, useContext } from "react";
+import { Models } from 'appwrite'
+import { createContext, useContext } from 'react'
 
-export const UserContext = createContext<{user: Models.Preferences | null, change: (change: any| null) => void }>({user: null, change:(i: any| null) => {}});
+export interface UserContextProp {
+  user: Models.Preferences | null
+  change: (change: any | null) => Promise<void>
+}
 
-export const useUser = () => {
-  const user = useContext<{user: Models.Preferences | null, change: (change: any | null) => void }>(UserContext);
-  return  user;
-};
+export const UserContext = createContext<UserContextProp>({ user: null, change: async (i: any | null) => undefined })
 
+export const useUser = (): UserContextProp => {
+  const user = useContext<UserContextProp>(UserContext)
+  return user
+}

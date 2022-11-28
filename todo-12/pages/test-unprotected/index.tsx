@@ -1,16 +1,15 @@
-export default function Unprotected(params:any) {
-    return (<>
+import React from 'react'
+
+export default function Unprotected (params: any): JSX.Element {
+  return (<>
         <h1>UnProtected</h1>
     </>)
-    
 }
 
-
-export async function getStaticProps(context: any) {
-    return {
-      props: {
-        protected: false,
-      },
+export async function getStaticProps (context: any): Promise<any> {
+  return {
+    props: {
+      protected: false
     }
   }
-  
+}

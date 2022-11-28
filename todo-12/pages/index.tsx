@@ -1,12 +1,13 @@
 import type { NextPage } from 'next'
 import Logout from '../components/Logout'
-import Task from '../components/Task';
-import TaskList from '../components/TaskList';
-import { useUser } from '../components/user';
+import Task from '../components/Task'
+import TaskList from '../components/TaskList'
+import { useUser } from '../components/user'
+import React from 'react'
 
 const Home: NextPage = (params: any) => {
-  console.log("params", params);
-  const userContext = useUser();
+  console.log('params', params)
+  const userContext = useUser()
 
   return (<>
     <div className="h-full flex flex-col">
@@ -21,18 +22,18 @@ const Home: NextPage = (params: any) => {
         <TaskList />
       </div>
       <div className='flex '>
-        <Task id={undefined} task={""} taskState={false} />
+        <Task id={undefined} task={''} taskState={false} />
       </div>
     </div>
   </>)
 }
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps (context: any): Promise<any> {
   return {
     props: {
-      protected: true,
+      protected: true
     }
-  };
+  }
 }
 
 export default Home
