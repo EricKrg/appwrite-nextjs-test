@@ -9,33 +9,14 @@ export interface TaskListProps {
   elements: TaskRecord[]
 }
 
-function TaskList (): JSX.Element {
+function TaskList ({ taskListInput }: { taskListInput: TaskRecord[] }): JSX.Element {
   const realtimeChannel = `databases.${Server.databaseID}.collections.${Server.collectionID}.documents`
   const appwrite = AppwriteSerivce.getInstance()
-  const [taskList, setTaskList] = useState<TaskRecord[]>([])
-  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [taskList, setTaskList] = useState<TaskRecord[]>(taskListInput)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [updateVal, setUpdateVal] = useState<{ action?: string, val?: TaskRecord }>({})
   const [showDone, setShowDone] = useState<boolean>(false)
   useEffect(() => {
-    const fetchData = async (): Promise<void> => {
-      setIsLoading(true)
-      const data = await appwrite.getTasks()
-      console.log('data', data)
-      setTaskList(data.documents.map((d) => {
-        return {
-          id: d.$id,
-          task: d.task,
-          taskState: d.taskState ?? false,
-          updated: d.$updatedAt
-        }
-      }))
-      console.log('fetch data', taskList)
-      setIsLoading(false)
-    }
-    fetchData().then().catch((error) => {
-      console.warn(error)
-    })
-
     const unSub = appwrite.subToCollection(realtimeChannel, (e: RealtimeResponseEvent<any>) => {
       console.log('change', e.payload)
       console.log('tasks', taskList)

@@ -35,6 +35,14 @@ export class AppwriteSerivce extends Component {
     return session
   }
 
+  setJWT (token: string): void {
+    this.account.client.setJWT(token)
+  }
+
+  async listSession (): Promise<Models.SessionList> {
+    return await this.account.listSessions()
+  }
+
   createCollection (name: string, data: any): void {
     // const res = await this.client.records.create(name, this.client.authStore.model?.id, data)
     // return res;
@@ -93,6 +101,21 @@ export class AppwriteSerivce extends Component {
 
   async getTasks (): Promise<Models.DocumentList<Models.Document>> {
     const res = await this.database.listDocuments(Server.databaseID, Server.collectionID)
+    return res
+  }
+
+  async getTasksWithJWT (token: string): Promise<Models.DocumentList<Models.Document>> {
+    const myHeaders = new Headers()
+    myHeaders.append('Cookie', token)
+    myHeaders.append('x-appwrite-project', Server.project)
+    myHeaders.append('Content-Type', 'application/json')
+    const requestOptions = {
+      method: 'GET',
+      headers: myHeaders
+    }
+
+    const data = await fetch(`${Server.endpoint}/databases/${Server.databaseID}/collections/${Server.collectionID}/documents`, requestOptions)
+    const res = await data.json()
     return res
   }
 

@@ -1,12 +1,14 @@
-import type { NextPage } from 'next'
+import type { NextApiRequest, NextPage } from 'next'
 import Logout from '../components/Logout'
 import Task from '../components/Task'
 import TaskList from '../components/TaskList'
 import { useUser } from '../components/user'
 import React from 'react'
+import AppwriteSerivce, { TaskRecord } from '../services/appwrite.service'
+import { SSRprops } from '../utils/SSRprops'
 
-const Home: NextPage = (params: any) => {
-  console.log('params', params)
+const Home: NextPage = ({ data, error }: any) => {
+  console.log('params', data, error)
   const userContext = useUser()
 
   return (<>
@@ -19,7 +21,7 @@ const Home: NextPage = (params: any) => {
         </div>
       </div>
       <div className="flex-col flex overflow-y-auto">
-        <TaskList />
+        <TaskList taskListInput={data}/>
       </div>
       <div className='flex '>
         <Task id={undefined} task={''} taskState={false} />
@@ -28,10 +30,40 @@ const Home: NextPage = (params: any) => {
   </>)
 }
 
-export async function getServerSideProps (context: any): Promise<any> {
-  return {
-    props: {
-      protected: true
+export async function getServerSideProps ({ req, res }: { req: NextApiRequest, res: any }): Promise<SSRprops> {
+  const appwrite = AppwriteSerivce.getInstance()
+  console.log('auth cookie', req.headers.cookie)
+  try {
+    console.log('fetch data')
+    let data: TaskRecord[] = []
+
+    if (req.headers.cookie) {
+      const res = await appwrite.getTasksWithJWT(req.headers.cookie)
+      data = res.documents.map((d) => {
+        return {
+          id: d.$id,
+          task: d.task,
+          taskState: d.taskState ?? false,
+          updated: d.$updatedAt
+        }
+      })
+    }
+
+    console.log('SSR data', data)
+    return {
+      props: {
+        data,
+        protected: true
+      }
+    }
+  } catch (error: any) {
+    console.warn('Server side error', error)
+    return {
+      props: {
+        data: [],
+        error: error.message,
+        protected: true
+      }
     }
   }
 }

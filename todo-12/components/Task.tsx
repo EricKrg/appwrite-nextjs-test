@@ -11,7 +11,6 @@ export default function Task (params: TaskRecord): JSX.Element {
 
   useEffect(() => {
     // update task if something changes
-    console.log('task change', params, task)
     if (!isUpdated) { // avoid flickering of changed value
       setTask({ ...params })
     }
