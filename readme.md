@@ -8,11 +8,14 @@ Used here:
     - Authentication and user control
     - CRUD Operations and Datastorage
     - Realtime updates to sync changes between clients
+    - Functions to extend Backend functionality
 - React and NextJS to build the Frontend-Application
     - Routing, Layouting and SSR
 - Tailwind as easy and beautiful CSS-Framework 
+    - Daisy UI for prebuilt components with Tailwind
 - Vagrant to create reproducable virtual machines
 - Docker to create reproducabel software containers
+
 
 ## How can I install it?
 
