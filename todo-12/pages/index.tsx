@@ -24,7 +24,7 @@ const Home: NextPage = ({ data, error }: any) => {
         <TaskList taskListInput={data}/>
       </div>
       <div className='flex '>
-        <Task id={undefined} task={''} taskState={false} />
+        <Task id={undefined} task={''} taskState={false} attachments={[]} />
       </div>
     </div>
   </>)
@@ -44,6 +44,7 @@ export async function getServerSideProps ({ req, res }: { req: NextApiRequest, r
           id: d.$id,
           task: d.task,
           taskState: d.taskState ?? false,
+          attachments: d.attachments ?? [],
           updated: d.$updatedAt
         }
       })

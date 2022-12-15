@@ -30,6 +30,7 @@ function TaskList ({ taskListInput }: { taskListInput: TaskRecord[] }): JSX.Elem
           id: e.payload.$id,
           task: e.payload.task,
           taskState: e.payload.taskState,
+          attachments: e.payload.attachments,
           updated: e.payload.$updatedAt
         }
       })
@@ -89,7 +90,7 @@ function TaskList ({ taskListInput }: { taskListInput: TaskRecord[] }): JSX.Elem
                       return <li className={'flex w-full transition-all ease-linear duration-500 fade-in' + (((i?.taskState) ?? false) ? 'fade-out' : '')
                         //  + (i.taskState || showDone ? "fade-in": "")
                         } key={i.id}>
-                            <Task key={i.id} id={i.id} task={i.task} taskState={i.taskState} updated={i.updated} />
+                            <Task key={i.id} id={i.id} task={i.task} taskState={i.taskState} updated={i.updated} attachments={i.attachments} />
                         </li>
                     })}
                 </ul>

@@ -1,4 +1,5 @@
-import { Account, Client, Databases, Models, Permission, RealtimeResponseEvent, Role } from 'appwrite'
+import { Account, Client, Databases, ID, Models, Permission, RealtimeResponseEvent, Role, Storage } from 'appwrite'
+import { cloneDeep } from 'lodash'
 import { Component } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { Server } from '../utils/config'
@@ -7,7 +8,13 @@ export interface TaskRecord {
   id?: string
   task?: string
   taskState?: boolean
+  attachments: string[]
   updated?: string
+}
+
+export interface Attachment {
+  filename: string
+  file_id: string
 }
 
 export class AppwriteSerivce extends Component {
@@ -15,12 +22,14 @@ export class AppwriteSerivce extends Component {
   private readonly client!: Client
   private readonly account!: Account
   private readonly database!: Databases
+  private readonly storage!: Storage
 
   private constructor (url: string, projectId: string) {
     super({})
     this.client = new Client().setEndpoint(url).setProject(projectId)
     this.account = new Account(this.client)
     this.database = new Databases(this.client)
+    this.storage = new Storage(this.client)
   }
 
   static getInstance (): AppwriteSerivce {
@@ -68,12 +77,12 @@ export class AppwriteSerivce extends Component {
     return res
   }
 
-  async createTask (task: string, taskState: boolean): Promise<void> {
+  async createTask (task: string, taskState: boolean, attachments: string[] = []): Promise<void> {
     const user = await this.getCurrentUser()
     if (user != null) {
       console.log('new task', user.$id)
       await this.database.createDocument(Server.databaseID, Server.collectionID,
-        'unique()', { task, taskState },
+        'unique()', { task, taskState, attachments },
         [
           Permission.update(Role.user(user.$id)),
           Permission.delete(Role.user(user.$id)),
@@ -84,19 +93,21 @@ export class AppwriteSerivce extends Component {
     }
   }
 
-  async updateTask (task: TaskRecord): Promise<void> {
+  async updateTask (task: TaskRecord): Promise<Models.Document> {
     console.log('update', task)
-    await this.database.updateDocument(
+    const res = await this.database.updateDocument(
       Server.databaseID,
       Server.collectionID,
       task.id!, {
         task: task.task,
-        taskState: task.taskState
+        taskState: task.taskState,
+        attachments: task.attachments
       })
+    return res
   }
 
-  async deleteTask (task: TaskRecord): Promise<void> {
-    await this.database.deleteDocument(Server.databaseID, Server.collectionID, task.id!)
+  async deleteDoc (documentId: string, collectionID: string): Promise<void> {
+    await this.database.deleteDocument(Server.databaseID, collectionID, documentId)
   }
 
   async getTasks (): Promise<Models.DocumentList<Models.Document>> {
@@ -126,6 +137,61 @@ export class AppwriteSerivce extends Component {
   subToCollection (subString: string, callback: (e: RealtimeResponseEvent<any>) => void): () => void {
     const sub = this.client.subscribe([subString], response => callback(response))
     return sub
+  }
+
+  async getAttachmentById (documentId: string): Promise<Models.Document> {
+    const res = await this.database.getDocument(Server.databaseID, Server.attachmentID, documentId)
+    return res
+  }
+
+  async getAttachmentFileById (fileId: string): Promise<URL> {
+    const url = this.storage.getFileDownload(Server.bucketID, fileId)
+    console.log('URL', url)
+    return url
+  }
+
+  async createAttachment (file: File, taskRecord: TaskRecord): Promise<boolean> {
+    // it could be advisable to use a cloud function so that all actions which
+    // depend on the creation of an Attachment are included in that call of the cloud function
+    const user = await this.getCurrentUser()
+    const taskRecordOrg = cloneDeep(taskRecord)
+    if (user != null) {
+      const attachmentID = uuidv4()
+      console.log('New attachment id', attachmentID)
+      const createFile = this.storage.createFile(Server.bucketID, attachmentID, file, [
+        Permission.update(Role.user(user.$id)),
+        Permission.delete(Role.user(user.$id)),
+        Permission.read(Role.user(user.$id))
+      ])
+
+      const createAttachment = this.database.createDocument(Server.databaseID, Server.attachmentID,
+        attachmentID, { filename: file.name, file_id: attachmentID },
+        [
+          Permission.update(Role.user(user.$id)),
+          Permission.delete(Role.user(user.$id)),
+          Permission.read(Role.user(user.$id))
+        ])
+
+      if (taskRecord.attachments != null) {
+        taskRecord.attachments.push(attachmentID)
+      } else {
+        taskRecord.attachments = [attachmentID]
+      }
+      const updateTask = this.updateTask(taskRecord)
+
+      try {
+        const res = await Promise.all([createFile, createAttachment, updateTask])
+        console.log('result', res)
+        return true
+      } catch (err: any) {
+        // ONLY ACCOUNTS FOR CREATE FILE ERRORS ATM
+        console.warn('error promise all, rolling back changes', err)
+        await this.updateTask(taskRecordOrg)
+        await this.deleteDoc(attachmentID, Server.attachmentID)
+        return false
+      }
+    }
+    return false
   }
 }
 export default AppwriteSerivce
