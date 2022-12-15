@@ -47,3 +47,9 @@ Requieres `node >= 12.x.x`
 
 2. Start the Frontend-Application with `cd todo-12 && npm run dev`
 3. Use the application under `http://localhost:3000`
+
+
+## Backup Server data
+
+https://www.youtube.com/watch?v=lM5yZEPtlvg
+https://gist.github.com/stnguyen90/fee636ff652b8ecbf761935b2aa254fb
