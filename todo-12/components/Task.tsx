@@ -35,6 +35,14 @@ export default function Task (params: TaskRecord): JSX.Element {
     setTask({ ...task, taskState: change, attachments: task!.attachments })
   }
 
+  const onRemoveAttachment = async (fileId: string): Promise<void> => {
+    if (task != null) {
+      await appwrite.removeAttachment(task, fileId)
+    } else {
+      console.warn(`Could not remove Attachment with id ${fileId} because Taskrecord is null.`)
+    }
+  }
+
   const onBlur = async (): Promise<void> => {
     setIsLoading(true)
     if ((task?.id) != null) {
@@ -73,7 +81,7 @@ export default function Task (params: TaskRecord): JSX.Element {
         {(params.id != null)
           ? <button className="text-red-600 dark:text-red-400" onClick={
             () => {
-              void (async () => await appwrite.deleteDoc(task!.id!, Server.collectionID))()
+              void (async () => await appwrite.deleteTask(task!))()
             }
           }>
             <HiMinusCircle />
@@ -91,7 +99,7 @@ export default function Task (params: TaskRecord): JSX.Element {
         <div className='flex'>
           { ((task?.attachments) != null)
             ? task?.attachments.map((attachment) => {
-              return <UploadItem key={attachment} attachment={attachment}/>
+              return <UploadItem key={attachment} attachment={attachment} onRemoveAttachment={onRemoveAttachment}/>
             })
             : null }
         </div>

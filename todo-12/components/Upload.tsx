@@ -32,9 +32,11 @@ export default function Upload ({ task }: { task: TaskRecord }): JSX.Element {
           })()
         }
         } />
-        <button className='text-slate-200' onClick={addFile}>
+        { (task.id != null)
+          ? <button className='text-slate-200' onClick={addFile}>
             <HiDocumentAdd></HiDocumentAdd>
         </button>
+          : null}
 
        { uploadFailed
          ? <div className="toast toast-end toast-bottom w-max z-50">

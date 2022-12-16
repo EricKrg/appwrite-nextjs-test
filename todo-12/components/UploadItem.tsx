@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { HiDocumentText, HiOutlineMinusCircle, HiOutlineMinusSm, HiOutlineX } from 'react-icons/hi'
+import { HiDocumentText, HiOutlineMinusSm } from 'react-icons/hi'
 import AppwriteSerivce from '../services/appwrite.service'
 
-export default function UploadItem ({ attachment }: { attachment: string }): JSX.Element {
+export default function UploadItem ({
+  attachment,
+  onRemoveAttachment
+}: { attachment: string, onRemoveAttachment: (fileId: string) => Promise<void> }): JSX.Element {
   const appwrite = AppwriteSerivce.getInstance()
   const [resolvedName, setResolvedNamed] = useState('')
 
   const resolveName = async (attachmentId: string): Promise<string> => {
-    const res = await appwrite.getAttachmentById(attachmentId)
-    return res.filename
+    try {
+      const res = await appwrite.getAttachmentById(attachmentId)
+      return res.filename
+    } catch (error) {
+      console.warn(`Name for ${attachment} could not be resolved.`, error)
+      return ''
+    }
   }
 
   const openFile = async (): Promise<void> => {
@@ -18,6 +26,7 @@ export default function UploadItem ({ attachment }: { attachment: string }): JSX
   }
 
   useEffect(() => {
+    console.log('use effect upload item', attachment)
     const resolve = async (): Promise<void> => {
       const res = await resolveName(attachment)
       console.log('resolved', res)
@@ -38,7 +47,9 @@ export default function UploadItem ({ attachment }: { attachment: string }): JSX
                     </span>
                 </div>
             </button>
-            <button className='mx-1 rounded-xl text-white bg-slate-500' onClick={() => console.log('DELETE not yet implemented.')}>
+            <button className='mx-1 rounded-xl text-white bg-slate-500' onClick={() => {
+              void (async () => await onRemoveAttachment(attachment))()
+            }}>
                 <HiOutlineMinusSm size={12} />
             </button>
         </div>

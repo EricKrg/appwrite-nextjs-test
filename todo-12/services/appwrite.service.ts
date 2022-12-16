@@ -1,5 +1,6 @@
 import { Account, Client, Databases, ID, Models, Permission, RealtimeResponseEvent, Role, Storage } from 'appwrite'
 import { cloneDeep } from 'lodash'
+import { resolve } from 'path'
 import { Component } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import { Server } from '../utils/config'
@@ -150,6 +151,36 @@ export class AppwriteSerivce extends Component {
     return url
   }
 
+  async deleteTask (taskRecord: TaskRecord): Promise<boolean> {
+    const deleteDoc = this.database.deleteDocument(Server.databaseID, Server.collectionID, taskRecord.id!)
+   // this.deleteDoc(taskRecord.id!, Server.collectionID)
+    const calls: Array<Promise<any>> = [deleteDoc]
+    // delete all attachments
+    // taskRecord.attachments.forEach(i => {
+    //   calls.push(this.storage.deleteFile(Server.bucketID, i))
+    //   calls.push(this.database.deleteDocument(Server.databaseID, Server.attachmentID, i))
+    // })
+    const sleep = async (ms: number): Promise<void> => await new Promise(resolve => setTimeout(resolve, ms))
+    try {
+      const res = await Promise.all(calls)
+      // this needs further invastigating, calling the document delete requests
+      // in parallel results in an unkown error
+      for (const attachment of taskRecord.attachments) {
+        await sleep(100)
+        console.log('delete doc')
+        await this.database.deleteDocument(Server.databaseID, Server.attachmentID, attachment)
+        await sleep(100)
+        console.log('delete file')
+        await this.storage.deleteFile(Server.bucketID, attachment)
+      }
+      console.log(res)
+      return true
+    } catch (error) {
+      console.warn(`Something went wrong deleting the Task with the id ${taskRecord.id!}`, error)
+      return false
+    }
+  }
+
   async createAttachment (file: File, taskRecord: TaskRecord): Promise<boolean> {
     // it could be advisable to use a cloud function so that all actions which
     // depend on the creation of an Attachment are included in that call of the cloud function
@@ -185,12 +216,38 @@ export class AppwriteSerivce extends Component {
         return true
       } catch (err: any) {
         // ONLY ACCOUNTS FOR CREATE FILE ERRORS ATM
-        console.warn('error promise all, rolling back changes', err)
+        // account for other errors by creating specific error-types
+        console.warn('Error creating , rolling back changes', err)
         await this.updateTask(taskRecordOrg)
         await this.deleteDoc(attachmentID, Server.attachmentID)
         return false
       }
     }
+    console.warn('User not logged in!')
+    return false
+  }
+
+  async removeAttachment (taskRecord: TaskRecord, fileId: string): Promise<boolean> {
+    // as described in createAttachment it would be advisble to move this logic into
+    // a cloud function which is triggered by an event (deletion of task) and executing all
+    // follow up task in that function
+    const user = await this.getCurrentUser()
+    // const taskRecordOrg = cloneDeep(taskRecord)
+    if (user != null) {
+      const deleteFile = this.storage.deleteFile(Server.bucketID, fileId)
+      const removeAttachment = this.database.deleteDocument(Server.databaseID, Server.attachmentID, fileId)
+      taskRecord.attachments = taskRecord.attachments.filter(i => i !== fileId)
+      const updateTask = this.updateTask(taskRecord)
+      try {
+        const res = await Promise.all([deleteFile, removeAttachment, updateTask])
+        console.log('delete result', res)
+        return true
+      } catch (err: any) {
+        console.warn('Error removing Attachment', fileId)
+        return false
+      }
+    }
+    console.warn('User not logged in!')
     return false
   }
 }
