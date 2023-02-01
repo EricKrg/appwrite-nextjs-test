@@ -10,7 +10,7 @@ services:
   traefik:
     image: traefik:2.7
     container_name: appwrite-traefik
-    <<: *x-logging
+    # <<: *x-logging
     command:
       - --providers.file.directory=/storage/config
       - --providers.file.watch=true
@@ -36,7 +36,7 @@ services:
   appwrite:
     image: appwrite/appwrite:1.1.0
     container_name: appwrite
-    <<: *x-logging
+    #<<: *x-logging
     restart: unless-stopped
     networks:
       - appwrite
@@ -151,7 +151,7 @@ services:
     image: appwrite/appwrite:1.1.0
     entrypoint: realtime
     container_name: appwrite-realtime
-    <<: *x-logging
+    #<<: *x-logging
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
@@ -192,7 +192,7 @@ services:
   appwrite-worker-audits:
     image: appwrite/appwrite:1.1.0
     entrypoint: worker-audits
-    <<: *x-logging
+    #<<: *x-logging
     container_name: appwrite-worker-audits
     restart: unless-stopped
     networks:
@@ -218,7 +218,7 @@ services:
   appwrite-worker-webhooks:
     image: appwrite/appwrite:1.1.0
     entrypoint: worker-webhooks
-    <<: *x-logging
+    #<<: *x-logging
     container_name: appwrite-worker-webhooks
     restart: unless-stopped
     networks:
@@ -240,7 +240,7 @@ services:
   appwrite-worker-deletes:
     image: appwrite/appwrite:1.1.0
     entrypoint: worker-deletes
-    <<: *x-logging
+    #<<: *x-logging
     container_name: appwrite-worker-deletes
     restart: unless-stopped
     networks:
@@ -295,7 +295,7 @@ services:
   appwrite-worker-databases:
     image: appwrite/appwrite:1.1.0
     entrypoint: worker-databases
-    <<: *x-logging
+    #<<: *x-logging
     container_name: appwrite-worker-databases
     restart: unless-stopped
     networks:
@@ -321,7 +321,7 @@ services:
   appwrite-worker-builds:
     image: appwrite/appwrite:1.1.0
     entrypoint: worker-builds
-    <<: *x-logging
+    #<<: *x-logging
     container_name: appwrite-worker-builds
     restart: unless-stopped
     networks:
@@ -349,7 +349,7 @@ services:
   appwrite-worker-certificates:
     image: appwrite/appwrite:1.1.0
     entrypoint: worker-certificates
-    <<: *x-logging
+    #<<: *x-logging
     container_name: appwrite-worker-certificates
     restart: unless-stopped
     networks:
@@ -381,7 +381,7 @@ services:
   appwrite-worker-functions:
     image: appwrite/appwrite:1.1.0
     entrypoint: worker-functions
-    <<: *x-logging
+    #<<: *x-logging
     container_name: appwrite-worker-functions
     restart: unless-stopped
     networks:
@@ -412,7 +412,7 @@ services:
   appwrite-executor:
     image: appwrite/appwrite:1.1.0
     entrypoint: executor
-    <<: *x-logging
+    #<<: *x-logging
     container_name: appwrite-executor
     restart: unless-stopped
     stop_signal: SIGINT
@@ -470,7 +470,7 @@ services:
   appwrite-worker-mails:
     image: appwrite/appwrite:1.1.0
     entrypoint: worker-mails
-    <<: *x-logging
+    #<<: *x-logging
     container_name: appwrite-worker-mails
     restart: unless-stopped
     networks:
@@ -497,7 +497,7 @@ services:
   appwrite-worker-messaging:
     image: appwrite/appwrite:1.1.0
     entrypoint: worker-messaging
-    <<: *x-logging
+    #<<: *x-logging
     container_name: appwrite-worker-messaging
     networks:
       - appwrite
@@ -517,7 +517,7 @@ services:
   appwrite-maintenance:
     image: appwrite/appwrite:1.1.0
     entrypoint: maintenance
-    <<: *x-logging
+    #<<: *x-logging
     container_name: appwrite-maintenance
     restart: unless-stopped
     networks:
@@ -549,7 +549,7 @@ services:
     image: appwrite/appwrite:1.1.0
     entrypoint: usage
     container_name: appwrite-usage
-    <<: *x-logging
+    #<<: *x-logging
     restart: unless-stopped
     networks:
       - appwrite
@@ -578,7 +578,7 @@ services:
     image: appwrite/appwrite:1.1.0
     entrypoint: schedule
     container_name: appwrite-schedule
-    <<: *x-logging
+    #<<: *x-logging
     restart: unless-stopped
     networks:
       - appwrite
@@ -594,7 +594,7 @@ services:
   mariadb:
     image: mariadb:10.7 # fix issues when upgrading using: mysql_upgrade -u root -p
     container_name: appwrite-mariadb
-    <<: *x-logging
+    #<<: *x-logging
     restart: unless-stopped
     networks:
       - appwrite
@@ -610,7 +610,7 @@ services:
   redis:
     image: redis:7.0.4-alpine
     container_name: appwrite-redis
-    <<: *x-logging
+    #<<: *x-logging
     restart: unless-stopped
     command: >
       redis-server
@@ -634,7 +634,7 @@ services:
   influxdb:
     image: appwrite/influxdb:1.5.0
     container_name: appwrite-influxdb
-    <<: *x-logging
+    #<<: *x-logging
     restart: unless-stopped
     networks:
       - appwrite
@@ -644,7 +644,7 @@ services:
   telegraf:
     image: appwrite/telegraf:1.4.0
     container_name: appwrite-telegraf
-    <<: *x-logging
+    #<<: *x-logging
     restart: unless-stopped
     networks:
       - appwrite

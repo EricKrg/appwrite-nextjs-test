@@ -9,6 +9,7 @@ Used here:
     - CRUD Operations and Datastorage
     - Realtime updates to sync changes between clients
     - Functions to extend Backend functionality
+    - storage for file up/download
 - React and NextJS to build the Frontend-Application
     - Routing, Layouting and SSR
 - Tailwind as easy and beautiful CSS-Framework 

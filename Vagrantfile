@@ -15,6 +15,9 @@ Vagrant.configure("2") do |config|
         config.vm.provision :docker
         config.vm.provision "docker-compose-run", type: "shell",preserve_order: true, :run => 'always', path: "./vagrant_data/docker/run.sh"
 
+        config.vm.provision "https-tunnel-setup", type: "shell", preserve_order: true, path: "./vagrant_data/cloudflare/install.sh"
+        config.vm.provision "https-tunnel-run", type: "shell",preserve_order: true, :run => 'always', path: "./vagrant_data/cloudflare/run.sh"
+
         ubuntu.trigger.before :destroy, :halt do |trigger|
             trigger.info = "Stopping container..."
             trigger.run_remote = {inline: "cd /vagrant/docker && docker-compose stop"}
